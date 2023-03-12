@@ -1,0 +1,26 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Load the data into a pandas dataframe
+df = pd.read_csv('twitter_data.csv')
+
+# Initialize the sentiment analyzer
+nltk.download('vader_lexicon')
+sid = SentimentIntensityAnalyzer()
+
+# Calculate the sentiment score for each tweet
+df['sentiment_score'] = df['text'].apply(lambda x: sid.polarity_scores(x)['compound'])
+
+# Create a histogram of the sentiment scores
+sns.histplot(data=df, x='sentiment_score', bins=20)
+plt.title('Distribution of sentiment scores')
+plt.xlabel('Sentiment score')
+plt.ylabel('Frequency')
+plt.show()
+
+# Calculate the average sentiment score for the brand
+brand_sentiment = df['sentiment_score'].mean()
+print('Average brand sentiment:', brand_sentiment)
